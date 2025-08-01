@@ -24,7 +24,7 @@ function install_game () {
         if [ "$2" -eq 1 ]; then
             return 1
         else
-            zenity --error --width 200 --height 100 --title="${error_title}" --text="${error_text}"
+            yad --error --width 200 --height 100 --title="${error_title}" --text="${error_text}"
             return 1
         fi
     fi
@@ -50,14 +50,14 @@ function detect_game () {
             fi
         fi
     done
-    zenity --question --width 600 --height 300 --title="${not_found_title}" --text="${not_found_text}"
+    yad --question --width 600 --height 300 --title="${not_found_title}" --text="${not_found_text}"
     if [ $? -eq 1 ]; then
         echo "User refused to select a file, quitting."
         return 1
     fi
     while true
     do
-        user_path=$(zenity --file-selection --title="${select_title}")
+        user_path=$(yad --file-selection --title="${select_title}")
         if [ $? -eq 1 ]; then
             echo "User cancelled file selection, quitting."
             return 1
@@ -91,5 +91,5 @@ if detect_user_data_dir; then
 else
     error_msg="Unable to detect your userdata directory, check your environment variables (\$HOME or \${XDG_DATA_HOME})."
     echo "${error_msg}"
-    zenity --error --width 300 --height 100 --title="" --text="${error_msg}"
+    yad --error --width 300 --height 100 --title="" --text="${error_msg}"
 fi

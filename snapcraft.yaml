@@ -79,9 +79,9 @@ parts:
       - usr/applications/sonic3air.desktop
       - usr/share/icons/hicolor/scalable/apps/sonic3air.png
 
-  zenity:
+  yad:
     after: [sonic3air-launcher]
     plugin: nil
     source: .
     stage-packages:
-      - zenity
+      - yad
