@@ -1,8 +1,10 @@
 name: sonic3air
-base: core22
+base: core24
 version: '24.02.02.0-stable'
-architectures:
-  - build-on: amd64
+platforms:
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
 summary: Fan-made remaster of Sonic 3&K
 description: |
   Dr. Eggman’s (AKA Dr. Robotnik’s) Death Egg was once again blasted by Sonic, crash-landing on the peak of a volcano on the Floating Island.
