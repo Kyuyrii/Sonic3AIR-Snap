@@ -20,22 +20,20 @@ apps:
   sonic3air:
     command: usr/bin/sonic3air
     desktop: usr/applications/sonic3air.desktop
+    common-id: org.sonic3air.Sonic3AIR
     extensions:
       - gnome
     plugs:
+      - unity7
+      - screen-inhibit-control
+      - audio-playback
+      - network
+      - network-bind
       - home
       - removable-media
-      - gtk-3-themes
-      - icon-themes
-      - desktop
-      - desktop-legacy
-      - x11
-      - opengl
-      - wayland
-      - audio-playback
+      - mount-observe
       - joystick
-      - screen-inhibit-control
-      - network
+      - bluez
 
 parts:
   sonic3air:
@@ -43,8 +41,6 @@ parts:
     source: https://github.com/Eukaryot/sonic3air/releases/download/v24.02.02.0-stable/sonic3air_game.tar.gz
     override-build: |
       craftctl default
-      pwd
-      ls -l
       mkdir -p $CRAFT_PART_INSTALL/usr/bin/
       mkdir -p $CRAFT_PART_INSTALL/usr/lib/
       mv -f $CRAFT_PART_INSTALL/sonic3air_linux $CRAFT_PART_INSTALL/usr/bin
@@ -64,8 +60,6 @@ parts:
     source: ./launcher
     override-build: |
       craftctl default
-      pwd
-      ls -l
       mkdir -p $CRAFT_PART_INSTALL/usr/bin/
       mkdir -p $CRAFT_PART_INSTALL/usr/applications
       mkdir -p $CRAFT_PART_INSTALL/usr/share/icons/hicolor/scalable/apps
@@ -82,6 +76,5 @@ parts:
   yad:
     after: [sonic3air-launcher]
     plugin: nil
-    source: .
     stage-packages:
       - yad
