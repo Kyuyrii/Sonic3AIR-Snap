@@ -24,7 +24,7 @@ function install_game () {
         if [ "$2" -eq 1 ]; then
             return 1
         else
-            yad --error --width 200 --height 100 --title="${error_title}" --text="${error_text}"
+            qarma --error --width 200 --height 100 --title="${error_title}" --text="${error_text}"
             return 1
         fi
     fi
@@ -35,7 +35,7 @@ function install_game () {
 
 function detect_game () {
     local not_found_title="Game file not found"
-    local not_found_text="To play Sonic 3: A.I.R, you need the ROM of Sonic 3 &amp; Knuckles available in the SEGA Mega Drive &amp; and Genesis Classics collection.\n\nSelect the <b>Sonic_Knuckles_wSonic3.bin</b> file?"
+    local not_found_text="To play Sonic 3: A.I.R, you need the ROM of Sonic 3 & Knuckles available in the SEGA Mega Drive & Genesis Classics collection.<br>Select the <b>Sonic_Knuckles_wSonic3.bin</b> file?"
     local select_title="Select your Sonic 3 & Knuckles ROM file"
     local user_path=""
     local possible_paths=(
@@ -50,14 +50,14 @@ function detect_game () {
             fi
         fi
     done
-    yad --question --width 600 --height 300 --title="${not_found_title}" --text="${not_found_text}"
+    qarma --question --width 600 --height 300 --title="${not_found_title}" --text="${not_found_text}"
     if [ $? -eq 1 ]; then
         echo "User refused to select a file, quitting."
         return 1
     fi
     while true
     do
-        user_path=$(yad --file-selection --title="${select_title}")
+        user_path=$(qarma --file-selection --title="${select_title}")
         if [ $? -eq 1 ]; then
             echo "User cancelled file selection, quitting."
             return 1
@@ -73,7 +73,7 @@ if detect_user_data_dir; then
     # File paths to check
     install_dir="${user_data_dir}/Sonic3AIR"
     install_file="/Sonic_Knuckles_wSonic3.bin"
-    eggman_icon="/app/bin/icons/eggman-symbolic.svg"
+    eggman_icon="/usr/bin/icons/eggman-symbolic.svg"
     # Discord RPC
     for i in {0..9}; do
         test -S "$XDG_RUNTIME_DIR"/"discord-ipc-$i" || ln -sf {app/com.discordapp.Discord,"$XDG_RUNTIME_DIR"}/"discord-ipc-$i";
@@ -91,5 +91,5 @@ if detect_user_data_dir; then
 else
     error_msg="Unable to detect your userdata directory, check your environment variables (\$HOME or \${XDG_DATA_HOME})."
     echo "${error_msg}"
-    yad --error --width 300 --height 100 --title="" --text="${error_msg}"
+    qarma --error --width 300 --height 100 --title="" --text="${error_msg}"
 fi
