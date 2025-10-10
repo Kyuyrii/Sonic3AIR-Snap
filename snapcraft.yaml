@@ -22,7 +22,7 @@ apps:
     common-id: org.sonic3air.Sonic3AIR
     extensions: [kde-neon-6]
     environment:
-      QT_QPA_PLATFORMTHEME: kde
+      QT_QPA_PLATFORMTHEME: ""
     plugs:
       - unity7
       - screen-inhibit-control
@@ -34,6 +34,24 @@ apps:
       - mount-observe
       - joystick
       - bluez
+
+plugs:
+  shared-memory:
+    private: true
+  kvantum:
+    content: kvantum
+    interface: content
+    target: $SNAP/kvantum
+    default-provider: qt-style-kvantum
+
+environment:
+  QT_PLUGIN_PATH: $SNAP/kvantum/usr/lib/x86_64-linux-gnu/qt6/plugins${QT_PLUGIN_PATH:+:$QT_PLUGIN_PATH}
+
+layout:
+  /usr/share/color-schemes:
+    symlink: $SNAP/kvantum/usr/share/color-schemes
+  /usr/share/Kvantum:
+    symlink: $SNAP/kvantum/usr/share/Kvantum
 
 package-repositories:
   - type: apt
