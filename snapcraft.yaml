@@ -21,8 +21,6 @@ apps:
     command: sonic3air-launcher.sh
     desktop: org.sonic3air.Sonic3AIR.desktop
     common-id: org.sonic3air.Sonic3AIR
-    environment:
-      HOME: $SNAP_REAL_HOME
     extensions: [gnome]
     plugs:
       - unity7
