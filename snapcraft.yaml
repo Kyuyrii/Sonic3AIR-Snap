@@ -14,23 +14,22 @@ description: |
   To play Sonic 3 - Angel Island Revisited, you need Sonic 3 & Knuckles from the SEGA Mega Drive & Genesis Classics collection installed on Steam.
 grade: stable
 confinement: strict
+icon: sonic3air.png
 
 apps:
   sonic3air:
-    command: usr/bin/sonic3air
-    desktop: usr/applications/sonic3air.desktop
+    command: sonic3air-launcher.sh
+    desktop: org.sonic3air.Sonic3AIR.desktop
     common-id: org.sonic3air.Sonic3AIR
-    extensions: [kde-neon-6]
     environment:
-      QT_QPA_PLATFORMTHEME: xdgdesktopportal
-      LD_LIBRARY_PATH: $SNAP/lxqt-support/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR:$LD_LIBRARY_PATH
-      QT_PLUGIN_PATH: $SNAP/lxqt-support/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/qt6/plugins:$QT_PLUGIN_PATH
+      HOME: $SNAP_REAL_HOME
+    extensions: [gnome]
     plugs:
       - unity7
-      - screen-inhibit-control
       - audio-playback
       - network
       - network-bind
+      - screen-inhibit-control
       - home
       - removable-media
       - mount-observe
@@ -40,68 +39,30 @@ apps:
 plugs:
   shared-memory:
     private: true
-  lxqt-support:
-    content: lxqt-support
-    interface: content
-    target: $SNAP/lxqt-support
-    default-provider: lxqt-support
-
-layout:
-  /usr/share/color-schemes:
-    symlink: $SNAP/lxqt-support/usr/share/color-schemes
-  /usr/share/Kvantum:
-    symlink: $SNAP/lxqt-support/usr/share/Kvantum
-
-package-repositories:
-  - type: apt
-    url: http://origin.archive.neon.kde.org/user
-    suites: [noble]
-    components: [main]
-    architectures: [amd64]
-    key-id: 444DABCF3667D0283F894EDDE6D4736255751E5D
 
 parts:
-  sonic3air:
+  sonic3air-app:
     plugin: dump
     source: https://github.com/Eukaryot/sonic3air/releases/download/v$SNAPCRAFT_PROJECT_VERSION/sonic3air_game.tar.gz
     override-build: |
-      mkdir -p $CRAFT_PART_INSTALL/usr/bin/
-      mkdir -p $CRAFT_PART_INSTALL/usr/lib/
-      mv -f sonic3air_linux $CRAFT_PART_INSTALL/usr/bin/
-      mv -f libdiscord_game_sdk.so $CRAFT_PART_INSTALL/usr/lib/
-      mv -f data $CRAFT_PART_INSTALL/usr/bin/
-      mv -f config.json $CRAFT_PART_INSTALL/usr/bin/
-      chmod -R 777 $CRAFT_PART_INSTALL/usr/bin/data
+      craftctl default
+      chmod 777 $CRAFT_PART_INSTALL/data/*
     prime:
-      - usr/bin/sonic3air_linux
-      - usr/lib/libdiscord_game_sdk.so
-      - usr/bin/data/
-      - usr/bin/config.json
+      - data
+      - config.json
+      - libdiscord_game_sdk.so
+      - sonic3air_linux
 
   sonic3air-launcher:
-    after: [sonic3air]
-    plugin: nil
-    source: ./launcher
-    override-build: |
-      mkdir -p $CRAFT_PART_INSTALL/usr/bin/
-      mkdir -p $CRAFT_PART_INSTALL/usr/applications
-      mkdir -p $CRAFT_PART_INSTALL/usr/share/icons/hicolor/scalable/apps
-      mv -f sonic3air-launcher.sh $CRAFT_PART_INSTALL/usr/bin/sonic3air
-      mv -f sonic3air.desktop $CRAFT_PART_INSTALL/usr/applications/
-      mv -f sonic3air.png $CRAFT_PART_INSTALL/usr/share/icons/hicolor/scalable/apps/
-      chmod 777 $CRAFT_PART_INSTALL/usr/bin/sonic3air
+    after: [sonic3air-app]
+    plugin: dump
+    source: ./gui
     prime:
-      - usr/bin/sonic3air
-      - usr/applications/sonic3air.desktop
-      - usr/share/icons/hicolor/scalable/apps/sonic3air.png
+      - org.sonic3air.Sonic3AIR.desktop
+      - sonic3air-launcher.sh
 
-  qarma:
+  zenity:
     after: [sonic3air-launcher]
     plugin: nil
-    build-packages: [qmake6]
-    source: https://github.com/luebking/qarma.git
-    source-tag: v1.0.0
-    override-build: |
-      qmake6 PREFIX=$CRAFT_PART_INSTALL/
-      make
-      make install
+    stage-packages: [zenity]
+    prime: [usr/bin/zenity]

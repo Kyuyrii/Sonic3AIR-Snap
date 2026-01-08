@@ -2,11 +2,11 @@
 set -euo pipefail;
 
 function detect_user_data_dir () {
-    if [ -n "${XDG_DATA_HOME+set}" ]; then
+    if [ -n "${XDG_DATA_HOME+set}" ]; then 
         user_data_dir="${XDG_DATA_HOME}"
         return 0
     fi
-    if [ -n "${HOME+set}" ]; then
+    if [ -n "${HOME+set}" ]; then 
         user_data_dir="${HOME}"
         return 0
     fi
@@ -24,7 +24,7 @@ function install_game () {
         if [ "$2" -eq 1 ]; then
             return 1
         else
-            qarma --error --width 200 --height 100 --title="${error_title}" --text="${error_text}"
+            zenity --error --title="${error_title}" --text="${error_text}"
             return 1
         fi
     fi
@@ -35,8 +35,8 @@ function install_game () {
 
 function detect_game () {
     local not_found_title="Game file not found"
-    local not_found_text="To play Sonic 3: A.I.R, you need the ROM of Sonic 3 & Knuckles available in the SEGA Mega Drive & Genesis Classics collection.<br>Select the <b>Sonic_Knuckles_wSonic3.bin</b> file?"
-    local select_title="Select your Sonic 3 & Knuckles ROM file"
+    local not_found_text="To play Sonic 3: A.I.R, you need the ROM of Sonic 3 &amp; Knuckles available in the SEGA Mega Drive &amp; Genesis Classics collection.\n\nSelect the file?"
+    local select_title="Select your Sonic 3 & Knuckles file"
     local user_path=""
     local possible_paths=(
     "${HOME}/.local/share/Sonic3AIR/Sonic_Knuckles_wSonic3.bin"
@@ -50,14 +50,14 @@ function detect_game () {
             fi
         fi
     done
-    qarma --question --width 600 --height 300 --title="${not_found_title}" --text="${not_found_text}"
+    zenity --question --title="${not_found_title}" --text="${not_found_text}"
     if [ $? -eq 1 ]; then
         echo "User refused to select a file, quitting."
         return 1
     fi
     while true
     do
-        user_path=$(qarma --file-selection --title="${select_title}")
+        user_path=$(zenity --file-selection --title="${select_title}")
         if [ $? -eq 1 ]; then
             echo "User cancelled file selection, quitting."
             return 1
@@ -73,23 +73,20 @@ if detect_user_data_dir; then
     # File paths to check
     install_dir="${user_data_dir}/Sonic3AIR"
     install_file="/Sonic_Knuckles_wSonic3.bin"
-    eggman_icon="/usr/bin/icons/eggman-symbolic.svg"
-    # Discord RPC
-    for i in {0..9}; do
-        test -S "$XDG_RUNTIME_DIR"/"discord-ipc-$i" || ln -sf {app/com.discordapp.Discord,"$XDG_RUNTIME_DIR"}/"discord-ipc-$i";
-    done
+    eggman_icon="/icons/eggman-symbolic.svg"
+
     echo "Checking if the game is installed at: ${install_dir}${install_file}"
     if [ ! -f "${install_dir}${install_file}" ]; then
         echo "Game is not installed, starting detection..."
         if detect_game; then
-            ${SNAP}/usr/bin/sonic3air_linux "$@"
+            ${SNAP}/sonic3air_linux "$@"
         fi
     else
         echo "Game is installed, launching..."
-        ${SNAP}/usr/bin/sonic3air_linux "$@"
+        ${SNAP}/sonic3air_linux "$@"
     fi
 else
     error_msg="Unable to detect your userdata directory, check your environment variables (\$HOME or \${XDG_DATA_HOME})."
     echo "${error_msg}"
-    qarma --error --width 300 --height 100 --title="" --text="${error_msg}"
+    zenity --error --width 300 --height 100 --title="" --text="${error_msg}"
 fi
