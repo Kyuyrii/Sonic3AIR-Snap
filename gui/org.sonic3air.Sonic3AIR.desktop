@@ -6,3 +6,4 @@ Terminal=false
 Type=Application
 Categories=Game;
 StartupNotify=true
+StartupWMClass=sonic3air_linux
