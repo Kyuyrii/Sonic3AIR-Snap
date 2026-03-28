@@ -1,6 +1,6 @@
 name: sonic3air
 base: core24
-version: '24.02.02.0-stable'
+version: '26.03.28.0-stable'
 platforms:
   amd64:
     build-on: [amd64]
